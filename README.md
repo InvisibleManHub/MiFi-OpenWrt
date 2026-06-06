@@ -34,7 +34,6 @@ Added:
 - ksmbd
 - mailsend
 - [AmneziaWG](https://docs.amnezia.org/documentation/amnezia-wg/)
-- kmod-ledtrig-netdev
 - sing-box
 - SMB server
 - Kernel patch for counting RX/TX packets and bytes

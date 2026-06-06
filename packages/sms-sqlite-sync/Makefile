@@ -28,6 +28,9 @@ define Package/sms-sqlite-sync/install
 
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_CONF) ./files/sms_sync.conf $(1)/etc/config/sms_sync
+
+	$(INSTALL_DIR) $(1)/etc/uci-defaults
+	$(INSTALL_BIN) ./files/99-sms-sync-cron $(1)/etc/uci-defaults/99-sms-sync-cron
 endef
 
 $(eval $(call BuildPackage,sms-sqlite-sync))

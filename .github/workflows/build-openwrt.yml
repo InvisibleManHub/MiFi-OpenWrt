@@ -46,7 +46,8 @@ jobs:
             unzip zlib1g-dev file wget python3-cryptography mkbootimg qemu-utils \
             asciidoc help2man xsltproc bc binutils bzip2 make patch time \
             device-tree-compiler e2fsprogs fdisk util-linux perl perl-modules python3-dev \
-            xz-utils zstd zip libelf-dev libfdt-dev
+              xz-utils zstd zip libelf-dev libfdt-dev \
+              gcc-arm-none-eabi binutils-arm-none-eabi
 
       - name: Determine OpenWrt version
         id: openwrt_version

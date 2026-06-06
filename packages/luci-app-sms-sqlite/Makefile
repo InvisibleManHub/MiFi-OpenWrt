@@ -13,4 +13,10 @@ define Package/luci-app-sms-sqlite/install
 	$(INSTALL_BIN) ./files/sms_sqlite $(1)/usr/libexec/rpcd/sms_sqlite
 endef
 
+define Package/luci-app-sms-sqlite/postinst
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || /etc/init.d/rpcd restart >/dev/null 2>&1 || true
+exit 0
+endef
+
 # call BuildPackage

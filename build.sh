@@ -15,10 +15,30 @@ install_deps() {
         unzip zlib1g-dev file wget python3-cryptography mkbootimg qemu-utils \
         asciidoc help2man xsltproc bc binutils bzip2 make patch time \
         device-tree-compiler e2fsprogs fdisk util-linux nano perl perl-modules python3-dev \
-        xz-utils zstd zip libelf-dev libfdt-dev
+    xz-utils zstd zip libelf-dev libfdt-dev \
+    gcc-arm-none-eabi binutils-arm-none-eabi
 }
 
 install_deps
+
+check_diffconfig_packages() {
+    local missing=()
+    local line pkg
+
+    while IFS= read -r line; do
+        pkg="${line#CONFIG_PACKAGE_}"
+        pkg="${pkg%=y}"
+        if ! grep -q "^CONFIG_PACKAGE_${pkg}=y$" .config; then
+            missing+=("$pkg")
+        fi
+    done < <(grep '^CONFIG_PACKAGE_.*=y$' ../diffconfig_uz801)
+
+    if [ ${#missing[@]} -gt 0 ]; then
+        echo "Some packages from diffconfig_uz801 are not available after defconfig:"
+        printf '  - %s\n' "${missing[@]}"
+        exit 1
+    fi
+}
 
 if [ ! -d "openwrt" ]; then
     VERSION=$(git ls-remote --tags https://git.openwrt.org/openwrt/openwrt.git 'v25.12.*' | grep -oP 'v25\.12\.\d+$' | sort -V | tail -1)
@@ -41,7 +61,10 @@ mkdir -p "openwrt/target/linux/msm89xx"
 mkdir -p "openwrt/package/msm8916"
 cp -a msm89xx/* "openwrt/target/linux/msm89xx/"
 cp -a packages/* "openwrt/package/msm8916/"
-
+git clone --depth 1 https://github.com/Slava-Shchipunov/awg-openwrt.git awg-src
+cp -r awg-src/kmod-amneziawg openwrt/package/
+cp -r awg-src/amneziawg-tools openwrt/package/
+cp -r awg-src/luci-proto-amneziawg openwrt/package/
 cd openwrt
 
 echo "Updating feeds..."
@@ -51,6 +74,7 @@ echo "Updating feeds..."
 echo "Applying configuration (diffconfig_uz801)..."
 cp ../diffconfig_uz801 .config
 make defconfig
+check_diffconfig_packages
 
 CORES=$(nproc 2>/dev/null || echo 2)
 echo "Starting build with $CORES cores..."
@@ -74,4 +98,4 @@ if [ $BUILD_PACKAGES_ONLY -eq 1 ]; then
 else
     make -j"$CORES" || make -j1 V=s
     echo "Firmware build done! Look for it in openwrt/bin/targets/msm89xx/msm8916/"
-fi\
+fi

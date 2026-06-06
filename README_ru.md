@@ -34,7 +34,6 @@ sms-tool и [luci-app-3ginfo-lite](https://github.com/4IceG/luci-app-3ginfo-lite
 - ksmbd
 - mailsend
 - [AmneziaWG](https://docs.amnezia.org/documentation/amnezia-wg/)
-- kmod-ledtrig-netdev
 - sing-box
 - SMB сервер
 - Патч ядра для подсчета RX/TX пакетов и байтов

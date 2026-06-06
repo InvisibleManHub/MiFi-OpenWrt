@@ -35,7 +35,7 @@
  	}
  
 +	DEV_STATS_INC(netdev, rx_packets);
-+	DEV_STATS_ADD(netdev, rx_bytes, hdr->len);
++	DEV_STATS_ADD(netdev, rx_bytes, skb->len);
 +
  	netif_receive_skb(skb);
  }
