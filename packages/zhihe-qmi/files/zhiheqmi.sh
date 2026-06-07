@@ -87,6 +87,24 @@ proto_zhiheqmi_setup() {
 	[ -n "$DNS2" ] && proto_add_dns_server "$DNS2"
 	[ -n "$MTU" ] && json_add_int mtu "$MTU"
 	proto_send_update "$config"
+
+	(
+		local misses=0
+		while sleep 20; do
+			[ -f "/var/run/zhiheqmi_${config}.pid" ] || break
+				if qmicli -d "$device" --device-open-proxy --wds-get-packet-service-status 2>/dev/null | grep -q "'disconnected'"; then
+					misses=$((misses + 1))
+				else
+					misses=0
+				fi
+				if [ $misses -ge 2 ]; then
+					logger -t zhihe-qmi "Watchdog: Modem reported disconnected! Forcing interface restart..."
+					sh -c "ifdown '$config'; sleep 3; ifup '$config'" &
+					break
+				fi
+		done
+	) &
+	echo "$!" > "/var/run/zhiheqmi_${config}_wd.pid"
 }
 
 proto_zhiheqmi_teardown() {
@@ -96,6 +114,12 @@ proto_zhiheqmi_teardown() {
 	[ -z "$iface" ] && iface="wwan0"
 
 	logger -t zhihe-qmi "Tearing down connection on $iface..."
+
+	local wdpid=$(cat "/var/run/zhiheqmi_${config}_wd.pid" 2>/dev/null)
+	if [ -n "$wdpid" ]; then
+		kill -9 "$wdpid" 2>/dev/null
+		rm -f "/var/run/zhiheqmi_${config}_wd.pid"
+	fi
 
 	local qmipid=$(cat "/var/run/zhiheqmi_${config}.pid" 2>/dev/null)
 	if [ -n "$qmipid" ]; then

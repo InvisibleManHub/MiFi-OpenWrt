@@ -84,3 +84,10 @@ endef
 EOF
 
 echo "mac80211 patches applied successfully"
+
+if [ ! -d "awg-src" ]; then
+    git clone --depth 1 https://github.com/Slava-Shchipunov/awg-openwrt.git awg-src
+fi
+cp -r awg-src/kmod-amneziawg "$OPENWRT_DIR/package/"
+cp -r awg-src/amneziawg-tools "$OPENWRT_DIR/package/"
+cp -r awg-src/luci-proto-amneziawg "$OPENWRT_DIR/package/"

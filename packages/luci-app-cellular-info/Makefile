@@ -7,12 +7,6 @@ PKG_LICENSE:=GPL-3.0
 
 include $(TOPDIR)/feeds/luci/luci.mk
 
-define Package/luci-app-cellular-info/install
-	$(call Package/luci-app-cellular-info/install/default,$(1))
-	$(INSTALL_DIR) $(1)/usr/libexec/rpcd
-	$(INSTALL_BIN) ./luci-app-cellular-info/files/cellular_info $(1)/usr/libexec/rpcd/cellular_info
-endef
-
 define Package/luci-app-cellular-info/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || /etc/init.d/rpcd restart >/dev/null 2>&1 || true

@@ -116,6 +116,9 @@ jobs:
             make "package/msm8916/$pkg_name/compile" -j$(nproc) \
               || make "package/msm8916/$pkg_name/compile" -j1 V=s
           done
+          make "package/kmod-amneziawg/compile" -j$(nproc) || make "package/kmod-amneziawg/compile" -j1 V=s
+          make "package/amneziawg-tools/compile" -j$(nproc) || make "package/amneziawg-tools/compile" -j1 V=s
+          make "package/luci-proto-amneziawg/compile" -j$(nproc) || make "package/luci-proto-amneziawg/compile" -j1 V=s
 
       - name: Collect .apk artifacts
         run: |

@@ -12,11 +12,17 @@
 	"admin/modem/sms/list": {
 		"title": "Inbox",
 		"order": 1,
-		"action": { "type": "view", "path": "sms_sqlite/list" }
+		"action": { "type": "view", "path": "sms_sqlite/list" },
+		"depends": {
+			"acl": [ "luci-app-sms-sqlite" ]
+		}
 	},
 	"admin/modem/sms/send": {
 		"title": "Send SMS",
 		"order": 2,
-		"action": { "type": "view", "path": "sms_sqlite/send" }
+		"action": { "type": "view", "path": "sms_sqlite/send" },
+		"depends": {
+			"acl": [ "luci-app-sms-sqlite" ]
+		}
 	}
 }
