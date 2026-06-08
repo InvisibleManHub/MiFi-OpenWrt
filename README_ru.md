@@ -31,7 +31,6 @@ sms-tool и [luci-app-3ginfo-lite](https://github.com/4IceG/luci-app-3ginfo-lite
 - Русский язык
 - NFQUEUE
 - PBR
-- ksmbd
 - mailsend
 - [AmneziaWG](https://docs.amnezia.org/documentation/amnezia-wg/)
 - sing-box

@@ -31,7 +31,6 @@ Added:
 - Russian language
 - NFQUEUE
 - PBR
-- ksmbd
 - mailsend
 - [AmneziaWG](https://docs.amnezia.org/documentation/amnezia-wg/)
 - sing-box
@@ -41,7 +40,7 @@ Added:
 Packages written from scratch:
 - zhihe-qmi + luci-proto-zhiheqmi - for connecting to cellular network. Add `modem` interface with `Zhihe/Yiming QMI` protocol.
 - modem-at-engine - ubus service to send AT commands to modem the way it doesn't crash :D
-- sms-sqlite-sync + luci-app-sms-sqlite - checks for new SMS on SIM card every 3 minutes and moves them to database. Also able to send email about new SMS. LuCi app can show and send SMS.
+- sms-sqlite-sync + luci-app-sms-sqlite - checks for new SMS on SIM card every 3 minutes and moves them to database. Also able to send email about new SMS. LuCI app can show and send SMS.
 - luci-app-cellular-info - information about cellular connection, signal strength, and nearby cells.
 
 Unfortunately, I couldn't set up IPv6 on cellular connection :(
