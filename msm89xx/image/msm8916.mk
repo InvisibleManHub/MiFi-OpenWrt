@@ -37,6 +37,6 @@ define Device/yiming-uz801v3
                      block-mount f2fs-tools \
                      msm-firmware-dumper
 endef
-TARGET_DEVICES += yiming-uz801v3
+# TARGET_DEVICES += yiming-uz801v3
 
 endif
