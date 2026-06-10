@@ -1,4 +1,4 @@
-name: Build OpenWrt for UZ801
+name: Build OpenWrt for MiFi
 
 on:
   workflow_dispatch:
