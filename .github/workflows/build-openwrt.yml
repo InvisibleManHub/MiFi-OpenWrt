@@ -99,25 +99,22 @@ jobs:
         run: make download -j$(nproc)
 
       - name: Build firmware
+        continue-on-error: true
         working-directory: openwrt
         run: make -j$(nproc) || make -j1 V=s
 
       - name: Collect release artifacts
+        if: always()
         run: |
           mkdir -p release_files
           BIN=openwrt/bin/targets/msm89xx/msm8916
-          for pattern in "*.img" "*.bin" "*.zip" "*.sh"; do
-            cp $BIN/$pattern release_files/ 2>/dev/null || true
-          done
+          # Копируем абсолютно все скомпилированные ядра, rootfs и промежуточные образы
+          cp -a $BIN/* release_files/ 2>/dev/null || true
           ls -lh release_files/
 
-      - name: Create Release
-        uses: softprops/action-gh-release@v2
+      - name: Upload Laboratory Images
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          tag_name: "openwrt-${{ steps.buildnum.outputs.BUILD_NUM }}"
-          name: "OpenWrt for UZ801 Build ${{ steps.buildnum.outputs.BUILD_NUM }}"
-          body: |
-            OpenWrt ${{ steps.openwrt_version.outputs.VERSION }} for Yiming UZ801v3 (msm8916)
-          files: release_files/*
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: Laboratory-OpenWrt-Images
+          path: release_files/
