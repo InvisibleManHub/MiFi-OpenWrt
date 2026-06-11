@@ -98,23 +98,25 @@ jobs:
         working-directory: openwrt
         run: make download -j$(nproc)
 
-      - name: Build firmware
-        continue-on-error: true
+      - name: Build Kernel Only
         working-directory: openwrt
-        run: make -j$(nproc) || make -j1 V=s
+        # Компилируем только ядро, не запуская общую сборку образов
+        run: make target/linux/compile -j$(nproc)
 
-      - name: Collect release artifacts
+      - name: Collect Laboratory Boot Image
         if: always()
         run: |
           mkdir -p release_files
-          BIN=openwrt/bin/targets/msm89xx/msm8916
-          # Копируем абсолютно все скомпилированные ядра, rootfs и промежуточные образы
-          cp -a $BIN/* release_files/ 2>/dev/null || true
+          # Переходим в папку, где OpenWrt собирает само ядро Linux
+          BUILD_PATH=openwrt/build_dir/target-aarch64_generic_musl/linux-msm89xx_msm8916
+          # Ищем и копируем все собранные boot.img файлы и dtb карты железа
+          find $BUILD_PATH/ -name "boot*.img" -exec cp {} release_files/ \; 2>/dev/null || true
+          find $BUILD_PATH/ -name "*.dtb" -exec cp {} release_files/ \; 2>/dev/null || true
           ls -lh release_files/
 
-      - name: Upload Laboratory Images
+      - name: Upload Target Boot
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Laboratory-OpenWrt-Images
+          name: Laboratory-Boot-Only
           path: release_files/
